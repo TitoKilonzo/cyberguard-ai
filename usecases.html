@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI Cybersecurity Use Cases — CyberGuard AI</title>
+<meta name="description" content="Real-world AI applications in malware detection, network security, and automation.">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="page-usecases">
+<!-- Background orbs -->
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+<div class="bg-orb bg-orb-3"></div><nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon"><i class="fas fa-shield-halved"></i></div>
+      <span class="logo-text">Cyber<span>Guard</span> AI</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="learn.html">Learn</a></li>
+      <li><a href="detection.html">Detection</a></li>
+      <li><a href="usecases.html">Use Cases</a></li>
+      <li><a href="challenges.html">Risks</a></li>
+      <li><a href="bestpractices.html">Best Practices</a></li>
+    </ul>
+    <a href="tools.html" class="nav-cta"><i class="fas fa-microchip"></i> AI Tools</a>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="learn.html"><i class="fas fa-brain"></i> Learn</a>
+  <a href="detection.html"><i class="fas fa-radar"></i> Threat Detection</a>
+  <a href="usecases.html"><i class="fas fa-briefcase"></i> Use Cases</a>
+  <a href="challenges.html"><i class="fas fa-triangle-exclamation"></i> Risks</a>
+  <a href="bestpractices.html"><i class="fas fa-star"></i> Best Practices</a>
+  <a href="tools.html" class="mob-cta"><i class="fas fa-microchip"></i> Launch AI Tools</a>
+</div><div class="page-hero">
+  <canvas class="page-hero-canvas" id="usecases-canvas"></canvas>
+  <div class="page-hero-content">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span class="sep"><i class="fas fa-chevron-right"></i></span>
+      <span>Use Cases</span>
+    </div>
+    <div class="page-hero-tag"><i class="fas fa-briefcase"></i> Real-World Applications</div>
+    <h1>AI Cybersecurity Use Cases</h1>
+    <p>See how organizations deploy AI to solve specific challenges across malware detection, network security, and automation.</p>
+    <div class="page-hero-nav">
+      <a href="learn.html" class="phn-btn"><i class="fas fa-brain"></i> Learn</a>
+        <a href="detection.html" class="phn-btn"><i class="fas fa-radar"></i> Detection</a>
+        <a href="usecases.html" class="phn-btn current"><i class="fas fa-briefcase"></i> Use Cases</a>
+        <a href="challenges.html" class="phn-btn"><i class="fas fa-triangle-exclamation"></i> Risks</a>
+        <a href="bestpractices.html" class="phn-btn"><i class="fas fa-star"></i> Best Practices</a>
+    </div>
+  </div>
+</div><div class="marquee-bar">
+  <div class="marquee-track">
+    <div class="marquee-item"><i class="fas fa-shield-halved"></i> Threat Detection</div>
+    <div class="marquee-item"><i class="fas fa-bug"></i> Malware Analysis</div>
+    <div class="marquee-item"><i class="fas fa-network-wired"></i> Network Security</div>
+    <div class="marquee-item"><i class="fas fa-robot"></i> AI Automation</div>
+    <div class="marquee-item"><i class="fas fa-lock"></i> Zero Trust</div>
+    <div class="marquee-item"><i class="fas fa-envelope-open-text"></i> Phishing Detection</div>
+    <div class="marquee-item"><i class="fas fa-credit-card"></i> Fraud Prevention</div>
+    <div class="marquee-item"><i class="fas fa-eye"></i> Anomaly Detection</div>
+    <div class="marquee-item"><i class="fas fa-microchip"></i> AI Security</div>
+    <div class="marquee-item"><i class="fas fa-shield-halved"></i> Threat Detection</div>
+    <div class="marquee-item"><i class="fas fa-bug"></i> Malware Analysis</div>
+    <div class="marquee-item"><i class="fas fa-network-wired"></i> Network Security</div>
+    <div class="marquee-item"><i class="fas fa-robot"></i> AI Automation</div>
+    <div class="marquee-item"><i class="fas fa-lock"></i> Zero Trust</div>
+    <div class="marquee-item"><i class="fas fa-envelope-open-text"></i> Phishing Detection</div>
+    <div class="marquee-item"><i class="fas fa-credit-card"></i> Fraud Prevention</div>
+    <div class="marquee-item"><i class="fas fa-eye"></i> Anomaly Detection</div>
+    <div class="marquee-item"><i class="fas fa-microchip"></i> AI Security</div>
+  </div>
+</div>
+<section style="background:var(--bg1)">
+  <div class="container">
+    <div class="section-label reveal">Browse Cases</div>
+    <h2 class="section-title reveal">Select a Use Case</h2>
+    <div class="tabs-nav reveal">
+      <button class="tab-btn active" onclick="switchTab('malware',this)"><i class="fas fa-bug"></i> Malware Detection</button>
+      <button class="tab-btn" onclick="switchTab('network',this)"><i class="fas fa-network-wired"></i> Network Security</button>
+      <button class="tab-btn" onclick="switchTab('automation',this)"><i class="fas fa-robot"></i> Automation</button>
+    </div>
+    <div class="tab-content active" id="tab-malware">
+      <div class="reveal">
+        <h3 style="font-family:'Orbitron',monospace;font-size:1.15rem;color:#fff;margin-bottom:1.3rem">Use Case: AI for Malware Detection</h3>
+        <div class="point"><div class="point-bullet"></div><p><strong>Before AI:</strong> Malware detection was primarily signature-based — only identifying known malware. This made it completely ineffective against zero-day attacks and entirely new variants.</p></div>
+        <div class="point"><div class="point-bullet"></div><p><strong>With AI:</strong> Tools now use behavioral analysis to detect new, unknown malware by identifying patterns of abnormal activity in system behavior rather than relying on static signatures.</p></div>
+        <div class="point"><div class="point-bullet"></div><p><strong>Example — CrowdStrike:</strong> Uses AI to identify and block malicious activities based on behavior patterns rather than signatures, making it highly effective against emerging and zero-day threats.</p></div>
+        <div class="impact-row">
+          <div class="impact-chip"><i class="fas fa-check-circle"></i> Detects novel malware variants</div>
+          <div class="impact-chip"><i class="fas fa-check-circle"></i> Faster identification and response</div>
+        </div>
+        <div style="margin-top:2rem"><a href="tools.html" class="btn-primary btn-ripple"><i class="fas fa-microchip"></i> <span>Try Fraud Detector</span></a></div>
+      </div>
+      <div class="usecase-bg uc-bg1 reveal"><i class="fas fa-bug" style="position:relative;z-index:1;color:var(--c4);filter:drop-shadow(0 0 30px var(--c4))"></i></div>
+    </div>
+    <div class="tab-content" id="tab-network">
+      <div class="reveal">
+        <h3 style="font-family:'Orbitron',monospace;font-size:1.15rem;color:#fff;margin-bottom:1.3rem">AI for Network Security</h3>
+        <div class="point"><div class="point-bullet"></div><p><strong>Network Traffic Analysis:</strong> AI continuously analyzes traffic flows to distinguish normal activity from threats like DDoS attacks, data exfiltration, and lateral movement through the network.</p></div>
+        <div class="point"><div class="point-bullet"></div><p><strong>Zero Trust Architecture:</strong> AI enforces granular access policies, continuously verifying every user and device rather than trusting anything inside the network perimeter.</p></div>
+        <div class="point"><div class="point-bullet"></div><p><strong>Automated Intrusion Prevention:</strong> Systems automatically block suspicious connections and quarantine compromised endpoints without requiring manual security team intervention.</p></div>
+        <div class="point"><div class="point-bullet"></div><p><strong>Example — Vectra AI:</strong> Applies machine learning to monitor network traffic and identify advanced threats such as data leaks and internal attacks in near real time.</p></div>
+        <div class="impact-row">
+          <div class="impact-chip"><i class="fas fa-check-circle"></i> Automates threat detection workload</div>
+          <div class="impact-chip"><i class="fas fa-check-circle"></i> Reduces burden on security teams</div>
+        </div>
+        <div style="margin-top:2rem"><a href="detection.html" class="btn-outline btn-ripple"><i class="fas fa-radar"></i> <span>Learn Detection Methods</span></a></div>
+      </div>
+      <div class="usecase-bg uc-bg2 reveal"><i class="fas fa-network-wired" style="position:relative;z-index:1;color:var(--c1);filter:drop-shadow(0 0 30px var(--c1))"></i></div>
+    </div>
+    <div class="tab-content" id="tab-automation">
+      <div class="reveal">
+        <h3 style="font-family:'Orbitron',monospace;font-size:1.15rem;color:#fff;margin-bottom:1.3rem">Role of AI in Cybersecurity Automation</h3>
+        <div class="point"><div class="point-bullet"></div><p><strong>Incident Response Automation:</strong> AI systems automatically triage, contain, and remediate security incidents, reducing MTTR from hours to seconds across the enterprise.</p></div>
+        <div class="point"><div class="point-bullet"></div><p><strong>Vulnerability Scanning:</strong> Continuous AI-driven scanning identifies weaknesses in systems and applications before threat actors can exploit them, with context-aware prioritization.</p></div>
+        <div class="point"><div class="point-bullet"></div><p><strong>Patch Management:</strong> AI prioritizes and automates patch deployment based on threat intelligence, ensuring the most critical vulnerabilities are addressed first.</p></div>
+        <div class="point"><div class="point-bullet"></div><p><strong>Example — Microsoft Sentinel &amp; Siemplify:</strong> SOAR platforms that use AI to automate security workflows, reducing manual intervention and significantly speeding up response times.</p></div>
+        <div class="impact-row">
+          <div class="impact-chip"><i class="fas fa-check-circle"></i> Increased efficiency and faster response</div>
+          <div class="impact-chip"><i class="fas fa-check-circle"></i> Teams focus on strategic decisions</div>
+        </div>
+        <div style="margin-top:2rem"><a href="bestpractices.html" class="btn-success btn-ripple"><i class="fas fa-star"></i> <span>Best Practices</span></a></div>
+      </div>
+      <div class="usecase-bg uc-bg3 reveal"><i class="fas fa-robot" style="position:relative;z-index:1;color:var(--c3);filter:drop-shadow(0 0 30px var(--c3))"></i></div>
+    </div>
+  </div>
+</section>
+<section style="background:var(--bg0)">
+  <div class="container">
+    <div class="section-label reveal">Key AI Platforms</div>
+    <h2 class="section-title reveal">Industry-Leading AI Security Tools</h2>
+    <div class="cards-grid" style="margin-top:2.5rem">
+      <div class="card reveal delay-1"><div class="card-icon"><i class="fas fa-crow"></i></div><div class="card-title">CrowdStrike Falcon</div><div class="card-text">Uses behavioral AI to detect and prevent breaches across endpoints, workloads, and identities with industry-leading threat intelligence integration.</div><span class="card-tag">Endpoint AI</span></div>
+      <div class="card green reveal delay-2"><div class="card-icon"><i class="fas fa-vector-square"></i></div><div class="card-title">Vectra AI</div><div class="card-text">Network detection and response platform using AI to reveal and prioritize hidden attacker behavior across hybrid and multi-cloud environments.</div><span class="card-tag">Network AI</span></div>
+      <div class="card orange reveal delay-3"><div class="card-icon"><i class="fas fa-infinity"></i></div><div class="card-title">Darktrace</div><div class="card-text">Self-learning AI cybersecurity platform that autonomously detects and responds to cyber threats across the entire digital estate in real time.</div><span class="card-tag">Autonomous AI</span></div>
+    </div>
+  </div>
+</section>
+<section style="background:var(--bg1);padding:4rem 2rem">
+  <div class="container"><div class="cta-banner reveal">
+    <h2>Understand the Risks Too</h2>
+    <p>AI in cybersecurity also comes with challenges. Learn about adversarial attacks, bias, and over-reliance risks.</p>
+    <div class="cta-btns">
+      <a href="challenges.html" class="btn-danger btn-ripple"><i class="fas fa-triangle-exclamation"></i> <span>View Challenges</span></a>
+      <a href="bestpractices.html" class="btn-outline btn-ripple"><i class="fas fa-star"></i> <span>Best Practices</span></a>
+    </div>
+  </div></div>
+</section>
+<footer>
+  <div class="footer-grid">
+    <div>
+      <a href="index.html" class="logo">
+        <div class="logo-icon"><i class="fas fa-shield-halved"></i></div>
+        <span class="logo-text">Cyber<span>Guard</span> AI</span>
+      </a>
+      <p class="footer-desc">An AI-powered cybersecurity education platform — helping individuals and organizations detect fraud, understand threats, and stay protected.</p>
+      <div class="social-links" style="margin-top:1.3rem">
+        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+    <div class="footer-col"><h4>Learn</h4><ul>
+      <li><a href="learn.html">AI in Cybersecurity</a></li>
+      <li><a href="detection.html">Threat Detection</a></li>
+      <li><a href="usecases.html">Malware Detection</a></li>
+      <li><a href="usecases.html">Network Security</a></li>
+      <li><a href="usecases.html">Automation</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Awareness</h4><ul>
+      <li><a href="challenges.html">AI Risks</a></li>
+      <li><a href="bestpractices.html">Best Practices</a></li>
+      <li><a href="tools.html">Fraud Patterns</a></li>
+      <li><a href="tools.html">Phishing Tactics</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>AI Tools</h4><ul>
+      <li><a href="tools.html">Fraud Detector</a></li>
+      <li><a href="tools.html">Spam Analyzer</a></li>
+      <li><a href="tools.html">Product Checker</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p>Built &mdash; Powered by Tito Kinyambu SynthLink Tech Solutions. Educational use only.</p>
+    <p>CyberGuard AI &mdash; Empowering Digital Safety</p>
+  </div>
+</footer>
+<script src="assets/js/main.js"></script>
+<script>initMatrixCanvas('usecases-canvas');</script>
+</body></html>
