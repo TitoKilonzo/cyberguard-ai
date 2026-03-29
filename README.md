@@ -3,7 +3,6 @@
 
 ![Version](https://img.shields.io/badge/version-1.0.0-cyan)
 ![Status](https://img.shields.io/badge/status-production--ready-brightgreen)
-![Powered By](https://img.shields.io/badge/AI-Claude%20(Anthropic)-blueviolet)
 ![License](https://img.shields.io/badge/license-Educational%20Use-orange)
 
 ---
