@@ -375,15 +375,183 @@ function initBrainCanvas(id) {
 /* ============================================================
    AI API + TOOLS
    ============================================================ */
+/* ============================================================
+   CONFIGURATION — Set your API keys here
+   ============================================================ */
+
+// Set your API keys here (replace with your actual keys)
+const CONFIG = {
+  OPENAI_API_KEY: 'sk-your-openai-key-here', // Get from https://platform.openai.com/api-keys
+  ANTHROPIC_API_KEY: 'sk-ant-your-anthropic-key-here' // Get from https://console.anthropic.com/
+};
+
+// Choose which AI service to use: 'openai' or 'anthropic'
+const AI_SERVICE = 'openai'; // Change to 'anthropic' if preferred
+
+/* ============================================================
+   AI API CALL FUNCTION
+   ============================================================ */
+
 async function callAI(sys, msg) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:[{role:'user',content:msg}]})
-  });
-  const d=await res.json();
-  if(d.error) throw new Error(d.error.message);
-  return d.content[0].text;
-}
+  try {
+    if (AI_SERVICE === 'openai') {
+      const res = await fetch('https://api.openai.com/v1/chat/completions', {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${CONFIG.OPENAI_API_KEY}`
+        },
+        body:JSON.stringify({
+          model:'gpt-4o-mini',
+          messages:[{role:'system', content:sys}, {role:'user', content:msg}],
+          max_tokens:1000,
+          temperature:0.1
+        })
+      });
+      if (!res.ok) throw new Error('OpenAI API request failed');
+      const d = await res.json();
+      if (d.error) throw new Error(d.error.message);
+      return d.choices[0].message.content;
+    } else if (AI_SERVICE === 'anthropic') {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'x-api-key': CONFIG.ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01'
+        },
+        body:JSON.stringify({
+          model:'claude-3-5-sonnet-20241022',
+          max_tokens:1000,
+          system:sys,
+          messages:[{role:'user', content:msg}]
+        })
+      });
+      if (!res.ok) throw new Error('Anthropic API request failed');
+      const d = await res.json();
+      if (d.error) throw new Error(d.error.message);
+      return d.content[0].text;
+    }
+  } catch (e) {
+    console.warn('API call failed, using demo response:', e.message);
+    // Fallback to demo responses based on the system prompt type
+    if (sys.includes('fraud analyst')) {
+      // Analyze the input for demo purposes
+      const input = msg.toLowerCase();
+      let riskLevel = "LOW", riskScore = 25;
+      const suspicious = [], safe = [];
+      
+      if (input.includes('3 am') || input.includes('odd hours')) {
+        suspicious.push("Transaction at unusual hour (3 AM)");
+        riskScore += 30;
+      }
+      if (input.includes('foreign') || input.includes('international')) {
+        suspicious.push("International transaction from unfamiliar location");
+        riskScore += 25;
+      }
+      if (input.includes('multiple') || input.includes('rapid')) {
+        suspicious.push("Multiple rapid transactions");
+        riskScore += 20;
+      }
+      if (input.includes('familiar') || input.includes('regular')) {
+        safe.push("Familiar merchant or pattern");
+        riskScore -= 15;
+      }
+      
+      if (riskScore > 70) riskLevel = "HIGH";
+      else if (riskScore > 40) riskLevel = "MEDIUM";
+      
+      return JSON.stringify({
+        riskLevel: riskLevel,
+        riskScore: Math.min(100, Math.max(0, riskScore)),
+        suspiciousIndicators: suspicious.length ? suspicious : ["None detected"],
+        safeIndicators: safe.length ? safe : ["Transaction appears normal"],
+        recommendation: riskScore > 50 ? "Contact your bank immediately to verify this transaction" : "Monitor your account for unusual activity",
+        verdict: `Demo analysis: ${riskLevel} risk detected. In production, this would use AI for deeper analysis.`
+      });
+    } else if (sys.includes('phishing and spam')) {
+      const input = msg.toLowerCase();
+      let classification = "LEGITIMATE", confidence = 20;
+      const redFlags = [], safeSignals = [];
+      
+      if (input.includes('urgent') || input.includes('immediately')) {
+        redFlags.push("Creates urgency pressure");
+        confidence += 25;
+        classification = "PHISHING";
+      }
+      if (input.includes('verify') || input.includes('confirm') || input.includes('update')) {
+        redFlags.push("Requests verification of sensitive information");
+        confidence += 30;
+      }
+      if (input.includes('won') || input.includes('prize') || input.includes('lottery')) {
+        redFlags.push("Unsolicited prize notification");
+        confidence += 35;
+        classification = "SCAM";
+      }
+      if (input.includes('bank') && (input.includes('suspend') || input.includes('block'))) {
+        redFlags.push("Account suspension threat");
+        confidence += 40;
+        classification = "PHISHING";
+      }
+      if (input.includes('official') || input.includes('trusted sender')) {
+        safeSignals.push("Appears from known source");
+        confidence -= 20;
+      }
+      
+      return JSON.stringify({
+        classification: classification,
+        confidencePercent: Math.min(100, Math.max(0, confidence)),
+        redFlags: redFlags.length ? redFlags : ["None detected"],
+        safeSignals: safeSignals.length ? safeSignals : ["Message structure appears normal"],
+        explanation: `Demo analysis: This message shows characteristics of ${classification.toLowerCase()}. Real AI would analyze language patterns, sender reputation, and contextual factors.`,
+        recommendation: confidence > 50 ? "Do not respond or click links. Report as spam/phishing." : "Exercise caution and verify through official channels."
+      });
+    } else if (sys.includes('consumer protection')) {
+      const input = msg.toLowerCase();
+      let score = 50, verdict = "SUSPICIOUS";
+      const redFlags = [], verificationSteps = [], safetyTips = [];
+      
+      if (input.includes('too good') || input.includes('cheap') || input.includes('discount')) {
+        redFlags.push("Unrealistically low price");
+        score -= 25;
+      }
+      if (input.includes('new account') || input.includes('recent') || input.includes('few followers')) {
+        redFlags.push("New or unestablished seller");
+        score -= 20;
+      }
+      if (input.includes('m-pesa') || input.includes('cash only') || input.includes('bitcoin')) {
+        redFlags.push("Requires irreversible payment method");
+        score -= 30;
+        verdict = "PROBABLE SCAM";
+      }
+      if (input.includes('official') || input.includes('warranty') || input.includes('receipt')) {
+        score += 20;
+        verdict = "LIKELY AUTHENTIC";
+      }
+      
+      verificationSteps.push("Check seller's review history and ratings");
+      verificationSteps.push("Compare price with official retailers");
+      verificationSteps.push("Contact manufacturer for authenticity verification");
+      
+      safetyTips.push("Never pay more than you can afford to lose");
+      safetyTips.push("Use buyer protection services when available");
+      safetyTips.push("Meet in public places for in-person exchanges");
+      
+      return JSON.stringify({
+        authenticityScore: Math.min(100, Math.max(0, score)),
+        verdict: verdict,
+        redFlags: redFlags.length ? redFlags : ["Price seems reasonable"],
+        verificationSteps: verificationSteps,
+        safetyTips: safetyTips,
+        summary: `Demo analysis: ${verdict}. Real AI would cross-reference with databases of known scams and counterfeit patterns.`
+      });
+    }
+    throw e; // Re-throw if no fallback
+  } catch (e) {
+    console.warn('API call failed:', e.message);
+    // Show error message instead of demo
+    throw new Error('AI analysis unavailable. Please check your API key configuration in main.js');
+  }
 function parseJSON(t){return JSON.parse(t.replace(/```json|```/g,'').trim());}
 
 const EXAMPLES={
@@ -416,8 +584,8 @@ async function runFraud(){
   const loading=document.getElementById('fraud-loading');
   const result=document.getElementById('fraud-result');
   btn.disabled=true;loading.innerHTML=buildScanAnim()+'Analyzing transaction patterns...';loading.classList.add('show');result.style.display='none';
-  const sys=`You are an expert financial fraud analyst. Analyze the transaction and respond ONLY with valid JSON (no markdown):
-{"riskLevel":"LOW|MEDIUM|HIGH","riskScore":0-100,"suspiciousIndicators":["..."],"safeIndicators":["..."],"recommendation":"...","verdict":"..."}`;
+  const sys=`You are an expert financial fraud analyst specializing in detecting fraudulent transactions, especially in African markets like Kenya. Analyze the transaction details for fraud indicators and respond ONLY with valid JSON (no markdown):
+{"riskLevel":"LOW|MEDIUM|HIGH","riskScore":0-100,"suspiciousIndicators":["List specific red flags found"],"safeIndicators":["List reassuring factors"],"recommendation":"Clear action steps for the user","verdict":"Brief summary of the analysis"}`;
   try{
     const d=parseJSON(await callAI(sys,'Transaction:\n'+input));
     const lvl=d.riskLevel?.toLowerCase()||'high';
@@ -449,8 +617,42 @@ async function runFraud(){
     result.style.display='block';
     setTimeout(()=>{const f=document.getElementById('rfill');if(f)f.style.width=d.riskScore+'%';},50);
   }catch(e){
-    result.innerHTML=`<div class="verdict-box" style="border-color:rgba(255,62,108,.3)"><i class="fas fa-circle-xmark verdict-icon" style="color:var(--c4)"></i><div class="verdict-text"><h4>Analysis Error</h4><p style="color:var(--txt2)">Could not complete analysis. ${e.message||'Please try again.'}</p></div></div>`;
-    result.style.display='block';
+    // Try demo mode
+    try {
+      const demoData = JSON.parse(await callAI(sys, input));
+      // Re-run the display logic with demo data
+      const lvl=demoData.riskLevel?.toLowerCase()||'high';
+      const colors={low:'var(--c3)',medium:'var(--c5)',high:'var(--c4)'};
+      const icons={low:'fa-circle-check',medium:'fa-circle-exclamation',high:'fa-circle-xmark'};
+      const bdrColors={low:'rgba(0,255,159,.25)',medium:'rgba(255,184,48,.25)',high:'rgba(255,62,108,.3)'};
+      result.innerHTML=`
+        <div class="risk-meter">
+          <div class="risk-label">Risk Assessment</div>
+          <div class="risk-level ${lvl}"><i class="fas ${icons[lvl]}"></i> ${demoData.riskLevel} RISK</div>
+          <div class="risk-bar-track"><div class="risk-bar-fill ${lvl}" style="width:0%" id="rfill"></div></div>
+          <div style="display:flex;justify-content:space-between;margin-top:.5rem">
+            <span style="font-size:.68rem;color:var(--txt3)">Score</span>
+            <span style="font-family:'Orbitron',monospace;font-size:.8rem;color:${colors[lvl]}">${demoData.riskScore}/100</span>
+          </div>
+        </div>
+        <div class="result-grid">
+          <div class="result-section"><h4><i class="fas fa-triangle-exclamation" style="color:var(--c4);margin-right:.4rem"></i>Suspicious Indicators</h4>
+            <ul class="result-list">${(demoData.suspiciousIndicators||[]).map(i=>`<li class="red">${i}</li>`).join('')||'<li style="color:var(--txt3)">None identified</li>'}</ul>
+          </div>
+          <div class="result-section"><h4><i class="fas fa-circle-check" style="color:var(--c3);margin-right:.4rem"></i>Safe Signals</h4>
+            <ul class="result-list">${(demoData.safeIndicators||[]).map(i=>`<li class="green">${i}</li>`).join('')||'<li style="color:var(--txt3)">None identified</li>'}</ul>
+          </div>
+        </div>
+        <div class="verdict-box" style="border:1px solid ${bdrColors[lvl]}">
+          <i class="fas ${icons[lvl]} verdict-icon" style="color:${colors[lvl]}"></i>
+          <div class="verdict-text"><h4>Recommendation</h4><p>${demoData.recommendation||''}</p><p style="margin-top:.5rem;font-size:.82rem;color:var(--txt2)">${demoData.verdict||''}</p></div>
+        </div>`;
+      result.style.display='block';
+      setTimeout(()=>{const f=document.getElementById('rfill');if(f)f.style.width=demoData.riskScore+'%';},50);
+    } catch (demoError) {
+      result.innerHTML=`<div class="verdict-box" style="border-color:rgba(255,62,108,.3)"><i class="fas fa-circle-xmark verdict-icon" style="color:var(--c4)"></i><div class="verdict-text"><h4>Analysis Error</h4><p style="color:var(--txt2)">Could not complete analysis. ${e.message||'Please try again.'}</p></div></div>`;
+      result.style.display='block';
+    }
   }
   loading.classList.remove('show');btn.disabled=false;
 }
@@ -462,8 +664,8 @@ async function runSpam(){
   const loading=document.getElementById('spam-loading');
   const result=document.getElementById('spam-result');
   btn.disabled=true;loading.innerHTML=buildScanAnim()+'Scanning message content...';loading.classList.add('show');result.style.display='none';
-  const sys=`You are a cybersecurity expert specializing in phishing and spam detection. Respond ONLY with valid JSON (no markdown):
-{"classification":"LEGITIMATE|SPAM|PHISHING|SCAM","confidencePercent":0-100,"redFlags":["..."],"safeSignals":["..."],"explanation":"...","recommendation":"..."}`;
+  const sys=`You are a cybersecurity expert specializing in phishing and spam detection, with deep knowledge of African scam patterns including bank impersonation, lottery scams, and advance fee fraud. Respond ONLY with valid JSON (no markdown):
+{"classification":"LEGITIMATE|SPAM|PHISHING|SCAM","confidencePercent":0-100,"redFlags":["Specific suspicious elements found"],"safeSignals":["Indicators of legitimacy"],"explanation":"Detailed analysis of why this classification","recommendation":"What the user should do next"}`;
   try{
     const d=parseJSON(await callAI(sys,'Message:\n'+input));
     const cl={'LEGITIMATE':'legitimate','SPAM':'spam','PHISHING':'phishing','SCAM':'scam'}[d.classification]||'spam';
@@ -504,8 +706,8 @@ async function runProduct(){
   const loading=document.getElementById('product-loading');
   const result=document.getElementById('product-result');
   btn.disabled=true;loading.innerHTML=buildScanAnim()+'Evaluating product signals...';loading.classList.add('show');result.style.display='none';
-  const sys=`You are a consumer protection expert and product authenticity analyst. Respond ONLY with valid JSON (no markdown):
-{"authenticityScore":0-100,"verdict":"LIKELY AUTHENTIC|SUSPICIOUS|LIKELY COUNTERFEIT|PROBABLE SCAM","redFlags":["..."],"verificationSteps":["..."],"safetyTips":["..."],"summary":"..."}`;
+  const sys=`You are a consumer protection expert specializing in detecting counterfeit products and online scams, with knowledge of African marketplaces like OLX, Facebook Marketplace, and Instagram sellers. Respond ONLY with valid JSON (no markdown):
+{"authenticityScore":0-100,"verdict":"LIKELY AUTHENTIC|SUSPICIOUS|LIKELY COUNTERFEIT|PROBABLE SCAM","redFlags":["Specific suspicious indicators"],"verificationSteps":["Practical steps to verify authenticity"],"safetyTips":["Safety recommendations for the user"],"summary":"Brief explanation of the assessment"}`;
   try{
     const d=parseJSON(await callAI(sys,'Product:\n'+input));
     const sc=d.authenticityScore||0;

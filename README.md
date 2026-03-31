@@ -117,37 +117,78 @@ All three tools are powered by **Claude Sonnet** via the Anthropic API. They ana
 
 ## Setup & Usage
 
-### Option A: Open Locally
+### Prerequisites
+- Node.js (v16 or higher) - [Download from nodejs.org](https://nodejs.org/)
+- Anthropic API Key - [Get from console.anthropic.com](https://console.anthropic.com/)
+
+### Installation & Setup
+
+1. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+
+2. **Set up Environment Variables**
+   - Copy `.env` file and add your Anthropic API key:
+   ```bash
+   ANTHROPIC_API_KEY=your_actual_api_key_here
+   ```
+
+3. **Start the Server**
+   ```bash
+   npm start
+   # Or directly: node server.js
+   ```
+
+4. **Open in Browser**
+   - Navigate to `http://localhost:3000`
+   - The AI tools will now work with real Claude API integration
+
+> **Note:** If the API key is not set or server fails, the tools will show demo responses for educational purposes.
+
+### Deploy to Vercel (Recommended)
+
+1. **Install Vercel CLI**
+   ```bash
+   npm install -g vercel
+   ```
+
+2. **Deploy**
+   ```bash
+   vercel
+   ```
+
+3. **Set Environment Variable**
+   - In Vercel dashboard, add `ANTHROPIC_API_KEY` to environment variables
+   - Redeploy
+
+4. **Access Your Site**
+   - Vercel will provide a URL where the tools work with real AI
+
+### Option A: Open Locally (Static)
 No build step required. Simply open `index.html` in any modern browser.
 
 ```bash
-# Clone or extract the zip
-cd cyberguard-ai
-
 # Open in browser
-open index.html        # macOS
 start index.html       # Windows
-xdg-open index.html    # Linux
 ```
 
-> **Note:** The AI tools make API calls to `api.anthropic.com`. When opened from claude.ai, authentication is handled automatically. For standalone deployment, see Option B.
+> **Note:** AI tools will use demo mode unless you configure API keys (see Real-Time AI Analysis below).
 
-### Option B: Deploy Standalone with API Key
+### Real-Time AI Analysis Setup
 
-To use the AI tools outside of Claude.ai, you need to add API authentication. Edit `assets/js/main.js` and update the `callAI` function:
+For **live AI analysis** (not demo mode), follow the detailed setup instructions in [`API_SETUP.md`](API_SETUP.md).
 
-```javascript
-async function callAI(systemPrompt, userMessage) {
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': 'YOUR_ANTHROPIC_API_KEY',   // Add this line
-      'anthropic-version': '2023-06-01'          // Add this line
-    },
-    body: JSON.stringify({ ... })
-  });
-}
+**Quick Setup:**
+1. Get an OpenAI API key from [platform.openai.com](https://platform.openai.com/)
+2. Edit `assets/js/main.js` and replace `sk-your-openai-key-here` with your real key
+3. Set `AI_SERVICE = 'openai'`
+4. Open `tools.html` - you'll get real AI analysis!
+
+> **Note:** OpenAI's GPT-4o-mini is faster and more cost-effective. Anthropic's Claude provides more detailed analysis.
+
+### Option B: Deploy to Vercel/Netlify
+The project includes Vercel configuration. For production deployment with API functions, create serverless functions for the `/api/analyze` endpoint.
 ```
 
 > **Security Warning:** Never expose API keys in client-side code for production deployments. Use a backend proxy (Node.js/Express, Cloudflare Worker, etc.) to protect your API key.
